@@ -46,7 +46,7 @@ export default function AuthModal() {
         dispatch(
           login({
             email: res.user.email!,
-            subscription: "Premium Plus",
+            subscription: "premium-plus",
           }),
         );
 
@@ -64,7 +64,7 @@ export default function AuthModal() {
         dispatch(
           login({
             email: res.user.email!,
-            subscription: "Premium Plus",
+            subscription: "premium-plus",
           }),
         );
       }
@@ -84,7 +84,7 @@ export default function AuthModal() {
       dispatch(
         login({
           email: res.user.email!,
-          subscription: "Premium Plus",
+          subscription: "premium-plus",
         }),
       );
 
