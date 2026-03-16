@@ -107,7 +107,7 @@ export default function AuthModal() {
     dispatch(
       login({
         email: "guest@summarist.app",
-        subscription: "Free Trial",
+        subscription: "free-trial",
       }),
     );
 
