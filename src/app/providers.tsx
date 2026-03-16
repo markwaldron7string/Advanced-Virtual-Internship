@@ -18,7 +18,7 @@ function AuthListener({ children }: { children: React.ReactNode }) {
         dispatch(
           login({
             email: user.email!,
-            subscription: "Premium Plus",
+            subscription: "premium-plus",
           })
         );
       } else {
