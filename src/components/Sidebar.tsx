@@ -114,7 +114,7 @@ export default function Sidebar({ open }: SidebarProps) {
                 <button
                   key={size}
                   ref={(el) => {
-                    buttonRefs.current[index] = el;
+                    if (el) buttonRefs.current[index] = el;
                   }}
                   className={`font-btn font-${index}`}
                   onClick={() => setFontSize(size)}
