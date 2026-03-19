@@ -36,7 +36,8 @@ export default function BookCard({ book }: any) {
 
         <img src={book.imageLink} alt={book.title} />
 
-        {book.subscriptionRequired && !user && (
+        {book.subscriptionRequired &&
+          (!user || user.subscription === "free-trial") && (
           <span className="book-pill">Premium</span>
         )}
       </div>

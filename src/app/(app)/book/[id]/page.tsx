@@ -15,6 +15,7 @@ import {
   FaRegStar,
 } from "react-icons/fa";
 import { CiMicrophoneOn } from "react-icons/ci";
+import Skeleton from "@/components/Skeleton"; 
 
 type Book = {
   id: string;
@@ -90,15 +91,12 @@ export default function BookPage() {
         "postLoginRedirect",
         `/player/${book?.id}`
       );
-
-      dispatch(openAuthModal());
+      dispatch(openAuthModal("login"));
       return;
     }
 
     if (book?.subscriptionRequired && user.subscription === "free-trial") {
-      router.push(
-        `/choose-plan?redirect=/player/${book?.id}`
-      );
+      router.push(`/choose-plan?redirect=/player/${book?.id}`);
       return;
     }
 
@@ -111,15 +109,12 @@ export default function BookPage() {
         "postLoginRedirect",
         `/player/${book?.id}?play=true`
       );
-
-      dispatch(openAuthModal());
+      dispatch(openAuthModal("login"));
       return;
     }
 
     if (book?.subscriptionRequired && user.subscription === "free-trial") {
-      router.push(
-        `/choose-plan?redirect=/player/${book?.id}?play=true`
-      );
+      router.push(`/choose-plan?redirect=/player/${book?.id}?play=true`);
       return;
     }
 
@@ -130,7 +125,6 @@ export default function BookPage() {
     if (!book) return;
 
     const stored = localStorage.getItem("savedBooks");
-
     let savedBooks = stored ? JSON.parse(stored) : [];
 
     const exists = savedBooks.find((b: Book) => b.id === book.id);
@@ -146,8 +140,69 @@ export default function BookPage() {
     localStorage.setItem("savedBooks", JSON.stringify(savedBooks));
   };
 
-  if (loading) return <p>Loading...</p>;
+  /* ---------------- SKELETON LOADING ---------------- */
+
+  if (loading) {
+    return (
+      <div className="book-page">
+        <div className="book-page__grid">
+          <div className="book-page__content">
+            <Skeleton width={500} height={32} />
+            <Skeleton width={200} height={30} style={{ marginTop: 12 }} />
+            <Skeleton width={400} height={30} style={{ marginTop: 12 }} />
+
+            <div style={{ marginTop: 24 }}>
+              <Skeleton width={250} height={20} style={{ marginTop: 12 }} />
+              <Skeleton width={250} height={20} style={{ marginTop: 12 }} />
+            </div>
+
+            <div className="read-listen__skeleton" style={{ marginTop: 24 }}>
+              <Skeleton width={140} height={50} style={{ marginTop: 12 }} />
+              <Skeleton width={140} height={50} style={{ marginTop: 12 }} />
+            </div>
+
+            <div style={{ marginTop: 24 }}>
+              <Skeleton width={300} height={20} />
+              <Skeleton width={300} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={300} height={20} style={{ marginTop: 8 }} />
+            </div>
+            <div style={{ marginTop: 36 }}>
+              <Skeleton width={160} height={40} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+            </div>
+            <div style={{ marginTop: 36 }}>
+              <Skeleton width={160} height={40} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+              <Skeleton width={600} height={20} style={{ marginTop: 8 }} />
+            </div>
+          </div>
+
+          <div className="book-page__image">
+            <Skeleton width={200} height={260} style={{ marginBottom: 96 }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!book) return <p>Book not found</p>;
+
+  /* ---------------- REAL UI ---------------- */
 
   return (
     <div className="book-page">
@@ -155,9 +210,10 @@ export default function BookPage() {
         <div className="book-page__content">
           <h1>
             {book.title}
-            {book.subscriptionRequired && !user && (
-              <span> (Premium)</span>
-            )}
+            {book.subscriptionRequired &&
+              (!user || user.subscription === "free-trial") && (
+                <span> (Premium)</span>
+              )}
           </h1>
 
           <h3>{book.author}</h3>
@@ -166,8 +222,7 @@ export default function BookPage() {
 
           <div className="book-page__meta">
             <span>
-              <FaRegStar size={18} /> {book.averageRating} (
-              {book.totalRating} ratings)
+              <FaRegStar size={18} /> {book.averageRating} ({book.totalRating} ratings)
             </span>
 
             <span>

@@ -1310,7 +1310,6 @@ section h2 {
 
 .settings h1 {
   margin: 0 auto;
-  border-bottom: 1px solid #e5e7eb;
   padding-bottom: 16px;
 }
 
@@ -1523,6 +1522,31 @@ section h2 {
   justify-content: flex-end;
   align-items: center;
   gap: 12px;
+}
+
+/*  CAROUSEL */
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carousel-wrapper button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.books-row {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.books-row::-webkit-scrollbar {
+  display: none;
 }
 
 /* =========================
@@ -1948,7 +1972,6 @@ section h2 {
 }
 
 /* arrow */
-
 .faq-icon {
   transition: transform 0.25s ease;
 }
@@ -1958,7 +1981,6 @@ section h2 {
 }
 
 /* answer container */
-
 .faq-content {
   max-height: 0;
   overflow: hidden;
@@ -1966,7 +1988,6 @@ section h2 {
 }
 
 /* open state */
-
 .faq.open .faq-content {
   max-height: 200px;
 }
@@ -1979,9 +2000,116 @@ section h2 {
   text-align: left;
 }
 
+/* CHECKOUT SCREEN */
+.checkout-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+.checkout-page {
+  overflow-x: hidden;
+}
+
+.checkout-left {
+  background: #f7f7f7;
+  padding: 20px 60px;
+}
+
+.checkout-right {
+  padding: 80px 60px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.checkout-right input {
+  width: 322px;
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.checkout-right input::placeholder {
+  color: #9ca3af;
+}
+
+.card-input::placeholder {
+  color: #9ca3af;
+}
+
+/* BUTTON */
+.checkout-btn {
+  width: 100%; /* ✅ FIX */
+  padding: 16px;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.checkout-btn:hover {
+  background: #1d4ed8;
+}
+
+/* CARD */
+.card-row {
+  display: flex;
+  align-items: center;
+}
+
+.card-row.split input {
+  width: 50%;
+}
+
+.card-input {
+  border: none;
+  padding: 14px;
+  width: 100%;
+  font-size: 14px;
+  outline: none;
+}
+
+.card-name__input {
+  width: 322px;
+}
+
+/* LOGOS */
+.card-logos {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-right: 12px;
+}
+
+.visa-logo img {
+  width: 36px;
+  height: auto;
+}
+.mc-logo img {
+  width: 38px;
+  height: auto;
+}
+.amex-logo img {
+  width: 38px;
+  height: auto;
+}
+
+/* FOCUS */
+.card-container:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
 /* SKELETONS */
 .skeleton {
   pointer-events: none;
+}
+
+.read-listen__skeleton {
+  display: flex;
+  gap: 10px;
 }
 
 .skeleton__image {
@@ -2033,20 +2161,21 @@ section h2 {
 @media (max-width: 992px) {
   .book-page__grid {
     grid-template-columns: 1fr;
+    gap: 0;
   }
   .book-page__image {
     order: -1;
     display: flex;
     justify-content: center;
-    margin-bottom: 32px;
+    margin-bottom: 0;
   }
   .book-page__content {
     max-width: 620px;
-    margin: 0 auto;
   }
 
 }
 
+/* 768px */
 @media (max-width: 768px) {
   /* NAV LIST */
   .nav__list--login {
@@ -2237,6 +2366,15 @@ section h2 {
   .book-page {
     padding: 32px 18px;
   }
+  .book-page__grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .book-page__image {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+  }
   .book-page__content h1 {
     font-size: 24px;
   }
@@ -2299,7 +2437,25 @@ section h2 {
   }
   .pricing-faq {
   width: 70%;
-}
+  }
+
+  /* CHECKOUT */
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
+  .checkout-left {
+    padding: 20px 24px;
+    width: 100%;
+    padding-left: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .checkout-right {
+    padding: 40px 24px;
+    max-width: 100%;
+  }
+  
 }
 
 @media (max-width: 576px) {
@@ -2312,56 +2468,208 @@ section h2 {
 }
 
 @media (max-width: 524px) {
- .settings__login img {
-  width: 70%;
- }
- .settings-btn {
-  max-width: 100%;
- }
- .settings h1 {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin: 0 auto;
- }
- .player-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  padding-left: 0;
- }
- .player-content h1 {
-  font-size: 20px;
- }
- .player-content h2 {
-  font-size: 16px;
- }
- .player-content img {
-  max-width: 50%;
-  max-height: 50%;
- }
- .choose-hero__arch img {
-  width: 70%;
- }
- .upgrade-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  max-width: 90%;
- }
- .settings__section {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 100%;
- }
-}
+  .settings__login img {
+    width: 70%;
+  }
+  .settings-btn {
+    max-width: 100%;
+  }
+  .settings h1 {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+  }
+  .player-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    padding-left: 0;
+  }
+  .player-content h1 {
+    font-size: 20px;
+  }
+  .player-content h2 {
+    font-size: 16px;
+  }
+  .player-content img {
+    max-width: 50%;
+    max-height: 50%;
+  }
+  .choose-hero__arch img {
+    width: 70%;
+  }
+  .upgrade-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+  .settings__section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 100%;
+  }
+  }
 
-@media (max-width: 480px) {
-  .page-toolbar__inner {
-    max-width: calc(100% - 100px);
+  @media (max-width: 480px) {
+    .page-toolbar__inner {
+      max-width: calc(90% - 100px);
+      margin: 0 64px;
+    }
+    .page-container {
+      max-width: 100%;
+      padding-left: 12px;
+    }
+    .signup-btn {
+      margin-left: 12px;
+    }
+    .selected-book__quote {
+      display: none;
+    }
+  }
+
+@media (max-width: 380px) {
+  .checkout-right input {
+    width: 70%;
+  }
+  .card-row.split {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 50%;
+  }
+  .checkout-btn {
+    width: 256px;
+  }
+  .checkout-left {
+    align-items: start;
+    padding-left: 24px;
   }
 }
+  
+@media (max-width: 360px) {
+  .book-page__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .book-page__image {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .book-page__image img {
+    width: 100%;
+    max-width: 180px; 
+    height: auto;
+  }
+
+  .book-page__content {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 340px) {
+  .book-page {
+    padding: 20px 12px;
+  }
+
+  .book-page__content h1 {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  /* Author */
+  .book-page__content h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  /* Subtitle */
+  .book-page__subtitle {
+    font-size: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  /* Meta (ratings, etc) */
+  .book-page__meta {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+    margin: 12px 0;
+    padding-bottom: 12px;
+  }
+
+  .book-page__meta span {
+    font-size: 14px;
+  }
+
+  /* Buttons */
+  .book-btn {
+    padding: 10px;
+    font-size: 15px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .book-page__actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Library button */
+  .book-page__library {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* Section titles */
+  .book-section-title {
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+
+  .book-tags {
+    flex-direction: column; 
+    gap: 8px;
+  }
+
+  .book-tag {
+    width: 100%;             
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* Description */
+  .book-description {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
+
+  @media (max-width: 324px) {
+    .signup-btn {
+      display: flex;
+      margin: 0 auto;
+    }
+    .player__summary {
+      display: flex;
+      margin: 0 auto;
+      padding-top: 16px;
+    }
+  }
+
+  @media (max-width: 180px) {
+    .book-tag {
+      font-size: 8px;
+    }
+  }

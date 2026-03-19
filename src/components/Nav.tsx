@@ -19,7 +19,7 @@ export default function Nav() {
         <ul className="nav__list--wrapper">
           <li
             className="nav__list nav__list--login"
-            onClick={() => dispatch(openAuthModal())}
+            onClick={() => dispatch(openAuthModal("login"))}
           >
             Login
           </li>

@@ -29,7 +29,7 @@ export default function BookRow({
     )
       .then((res) => res.json())
       .then((data) => {
-        setBooks(data); // ✅ always Book[]
+        setBooks(data); 
         setLoading(false);
       });
   }, [status]);

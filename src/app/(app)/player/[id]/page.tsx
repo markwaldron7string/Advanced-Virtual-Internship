@@ -42,7 +42,7 @@ export default function PlayerPage() {
 
   const openLogin = () => {
     localStorage.setItem("postLoginRedirect", pathname);
-    dispatch(openAuthModal());
+    dispatch(openAuthModal("login"));
   };
 
   /* -------------------------------- */

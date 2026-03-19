@@ -155,7 +155,7 @@ export default function Sidebar({ open }: SidebarProps) {
 
             user
               ? dispatch(logout())
-              : dispatch(openAuthModal());
+              : dispatch(openAuthModal("login"));
           }}
         >
           <span className="sidebar__indicator" />

@@ -32,7 +32,7 @@ export default function SettingsPage() {
 
           <button
             className="settings-btn"
-            onClick={() => dispatch(openAuthModal())}
+            onClick={() => dispatch(openAuthModal("login"))}
           >
             Login
           </button>
@@ -44,11 +44,10 @@ export default function SettingsPage() {
   return (
     <div className="settings">
       <h1>Settings</h1>
-      {user.email === "guest@summarist.app" && (
-          <button
+      {user && user.subscription === "free-trial" && (
+          <button 
             className="upgrade-btn"
             onClick={() => router.push("/choose-plan")}
-            style={{ marginTop: "12px" }}
           >
             Upgrade
           </button>

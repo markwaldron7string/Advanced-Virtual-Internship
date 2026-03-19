@@ -9,8 +9,6 @@ import { closeAuthModal, login, setAuthMode } from "@/redux/slices/authSlice";
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
 
@@ -20,9 +18,9 @@ import Image from "next/image";
 export default function AuthModal() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isAuthModalOpen, authMode } = useSelector(
-    (state: RootState) => state.auth,
-  );
+
+  const { isAuthModalOpen, authMode, subscriptionIntent, previousAuthMode } =
+    useSelector((state: RootState) => state.auth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,43 +31,49 @@ export default function AuthModal() {
 
   if (!isAuthModalOpen) return null;
 
-  /* ---------------- LOGIN / REGISTER ---------------- */
+  /* ---------------- SUBMIT ---------------- */
 
   const handleSubmit = async () => {
     setError("");
     setLoading(true);
 
     try {
-      if (authMode === "login") {
-        const res = await signInWithEmailAndPassword(auth, email, password);
-
-        dispatch(
-          login({
-            email: res.user.email!,
-            subscription: "premium-plus",
-          }),
-        );
-
-        const redirect = localStorage.getItem("postLoginRedirect");
-
-        if (redirect) {
-          localStorage.removeItem("postLoginRedirect");
-          router.push(redirect);
-        } else {
-          router.push("/for-you");
-        }
-      } else {
-        const res = await createUserWithEmailAndPassword(auth, email, password);
-
-        dispatch(
-          login({
-            email: res.user.email!,
-            subscription: "premium-plus",
-          }),
-        );
+      if (!email || !password) {
+        setError("Please enter email and password");
+        setLoading(false);
+        return;
       }
-    } catch (err: any) {
-      setError(getFirebaseErrorMessage(err.code));
+
+      if (!email.includes("@") || !email.includes(".")) {
+        setError("Enter a valid email");
+        setLoading(false);
+        return;
+      }
+
+      if (subscriptionIntent && authMode === "signup-plan") {
+        localStorage.setItem("checkoutEmail", email);
+        dispatch(closeAuthModal());
+        router.push("/checkout");
+        return;
+      }
+
+      dispatch(
+        login({
+          email,
+          subscription: "free-trial",
+        })
+      );
+
+      const redirect = localStorage.getItem("postLoginRedirect");
+
+      if (redirect) {
+        localStorage.removeItem("postLoginRedirect");
+        router.push(redirect);
+      } else {
+        router.push("/for-you");
+      }
+    } catch {
+      setError("Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
@@ -80,11 +84,21 @@ export default function AuthModal() {
   const handleGoogleLogin = async () => {
     try {
       const res = await signInWithPopup(auth, googleProvider);
+      const email = res.user.email!;
+
+      if (subscriptionIntent && authMode === "signup-plan") {
+        localStorage.setItem("checkoutEmail", email);
+
+        dispatch(closeAuthModal());
+
+        router.push("/checkout");
+        return;
+      }
 
       dispatch(
         login({
-          email: res.user.email!,
-          subscription: "premium-plus",
+          email,
+          subscription: "free-trial",
         }),
       );
 
@@ -129,13 +143,16 @@ export default function AuthModal() {
     try {
       await sendPasswordResetEmail(auth, email);
       alert("Password reset email sent.");
-      dispatch(setAuthMode("login"));
+
+      dispatch(setAuthMode(previousAuthMode || "login")); // ✅ FIX
     } catch (err: any) {
       setError(err.message);
     }
   };
 
   /* ---------------- UI ---------------- */
+
+  const isSignupPlan = authMode === "signup-plan";
 
   return (
     <div
@@ -153,20 +170,26 @@ export default function AuthModal() {
         <h2 className="auth-modal__title">
           {authMode === "login" && "Log in to Summarist"}
           {authMode === "register" && "Sign up to Summarist"}
+          {authMode === "signup-plan" && "Sign up for Summarist"}
           {authMode === "reset" && "Reset your password"}
         </h2>
 
-        {/* ---------------- LOGIN ---------------- */}
-
-        {authMode === "login" && (
+        {(authMode === "login" || authMode === "signup-plan") && (
           <>
-            <button className="auth-modal__guest" onClick={handleGuestLogin}>
-              Login as a Guest
-            </button>
+            {!isSignupPlan && (
+              <>
+                <button
+                  className="auth-modal__guest"
+                  onClick={handleGuestLogin}
+                >
+                  Login as a Guest
+                </button>
 
-            <div className="auth-modal__divider">
-              <span>or</span>
-            </div>
+                <div className="auth-modal__divider">
+                  <span>or</span>
+                </div>
+              </>
+            )}
 
             <button className="auth-modal__google" onClick={handleGoogleLogin}>
               <Image
@@ -175,7 +198,7 @@ export default function AuthModal() {
                 width={18}
                 height={18}
               />
-              Login with Google
+              {isSignupPlan ? "Sign up with Google" : "Login with Google"}
             </button>
 
             <div className="auth-modal__divider">
@@ -201,7 +224,7 @@ export default function AuthModal() {
               {error && <p style={{ color: "red" }}>{error}</p>}
 
               <button className="btn auth-modal__submit" onClick={handleSubmit}>
-                Login
+                {isSignupPlan ? "Sign up" : "Login"}
               </button>
 
               <p className="auth-modal__forgot">
@@ -212,49 +235,6 @@ export default function AuthModal() {
             </div>
           </>
         )}
-
-        {/* ---------------- REGISTER ---------------- */}
-
-        {authMode === "register" && (
-          <>
-            <button className="auth-modal__google" onClick={handleGoogleLogin}>
-              <Image
-                src="/assets/google.png"
-                alt="google"
-                width={18}
-                height={18}
-              />
-              Sign up with Google
-            </button>
-
-            <div className="auth-modal__divider">
-              <span>or</span>
-            </div>
-
-            <div className="auth-modal__form">
-              <input
-                className="auth-modal__input"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <input
-                className="auth-modal__input"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-
-              <button className="btn auth-modal__submit" onClick={handleSubmit}>
-                Sign up
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* ---------------- RESET PASSWORD ---------------- */}
 
         {authMode === "reset" && (
           <>
@@ -277,14 +257,16 @@ export default function AuthModal() {
             </div>
 
             <p className="auth-modal__switch">
-              <span onClick={() => dispatch(setAuthMode("login"))}>
-                Go to login
+              <span
+                onClick={() =>
+                  dispatch(setAuthMode(previousAuthMode || "login"))
+                }
+              >
+                Go back
               </span>
             </p>
           </>
         )}
-
-        {/* ---------------- SWITCH ---------------- */}
 
         {authMode === "login" && (
           <p className="auth-modal__switch">
@@ -299,33 +281,7 @@ export default function AuthModal() {
             </span>
           </p>
         )}
-
-        {authMode === "register" && (
-          <p className="auth-modal__switch">
-            Already have an account?{" "}
-            <span onClick={() => dispatch(setAuthMode("login"))}>Login</span>
-          </p>
-        )}
       </div>
     </div>
   );
-}
-
-/* ---------------- ERROR MAPPING ---------------- */
-
-function getFirebaseErrorMessage(code: string) {
-  switch (code) {
-    case "auth/invalid-email":
-      return "Invalid email address.";
-    case "auth/user-not-found":
-      return "User not found.";
-    case "auth/wrong-password":
-      return "Incorrect password.";
-    case "auth/email-already-in-use":
-      return "Email already in use.";
-    case "auth/weak-password":
-      return "Password must be at least 6 characters.";
-    default:
-      return "Something went wrong. Try again.";
-  }
 }

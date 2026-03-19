@@ -48,7 +48,7 @@ export default function LibraryPage() {
           <button
             className="settings-btn"
             style={{ marginTop: "16px" }}
-            onClick={() => dispatch(openAuthModal())}
+            onClick={() => dispatch(openAuthModal("login"))}
           >
             Login
           </button>

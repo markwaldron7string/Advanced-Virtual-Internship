@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   getSelectedBook,
@@ -11,16 +11,52 @@ import BookCard from "@/components/BookCard";
 import { MdPlayCircle } from "react-icons/md";
 import Skeleton from "@/components/Skeleton";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { IoChevronForward } from "react-icons/io5";
 
 export default function ForYouPage() {
   const router = useRouter();
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const recommendedRef = useRef<HTMLDivElement>(null);
+  const suggestedRef = useRef<HTMLDivElement>(null);
 
   const [selectedBook, setSelectedBook] = useState<any>(null);
   const [recommendedBooks, setRecommendedBooks] = useState<any[]>([]);
   const [suggestedBooks, setSuggestedBooks] = useState<any[]>([]);
   const [selectedDuration, setSelectedDuration] = useState("");
-
   const [loading, setLoading] = useState(true);
+
+  /* ---------------- SCROLL FUNCTION ---------------- */
+
+  const scroll = (ref: React.RefObject<HTMLDivElement>, amount: number) => {
+  if (!ref.current) return;
+
+  const el = ref.current;
+
+  const maxScroll = el.scrollWidth - el.clientWidth;
+
+  // If scrolling right at end → jump to start
+  if (amount > 0 && el.scrollLeft >= maxScroll - 5) {
+    el.scrollTo({ left: 0, behavior: "smooth" });
+    return;
+  }
+
+  // If scrolling left at start → jump to end
+  if (amount < 0 && el.scrollLeft <= 5) {
+    el.scrollTo({ left: maxScroll, behavior: "smooth" });
+    return;
+  }
+
+  // Normal scroll
+  el.scrollBy({
+    left: amount,
+    behavior: "smooth",
+  });
+};
+
+  /* ---------------- FETCH DATA ---------------- */
 
   useEffect(() => {
     async function fetchBooks() {
@@ -42,6 +78,8 @@ export default function ForYouPage() {
     fetchBooks();
   }, []);
 
+  /* ---------------- AUDIO DURATION ---------------- */
+
   useEffect(() => {
     if (!selectedBook?.audioLink) return;
 
@@ -57,24 +95,17 @@ export default function ForYouPage() {
     });
   }, [selectedBook]);
 
+  /* ---------------- LOADING ---------------- */
+
   if (loading) {
     return (
       <div className="page-content">
         <div className="page-container">
-          {/* Selected Book Skeleton */}
           <section>
             <h2>Selected just for you</h2>
-            <Skeleton
-              width={630}
-              height={200}
-              style={{
-                borderRadius: 12,
-                marginTop: 12,
-              }}
-            />
+            <Skeleton width={630} height={200} style={{ borderRadius: 12, marginTop: 12 }} />
           </section>
 
-          {/* Recommended Skeleton */}
           <section>
             <h2>Recommended For You</h2><br/>
             <p className="section-subtitle">We think you'll like these</p>
@@ -92,7 +123,6 @@ export default function ForYouPage() {
             </div>
           </section>
 
-          {/* Suggested Skeleton */}
           <section>
             <h2>Suggested Books</h2><br/>
             <p className="section-subtitle">Browse those books</p>
@@ -114,17 +144,19 @@ export default function ForYouPage() {
     );
   }
 
+  /* ---------------- UI ---------------- */
+
   return (
     <div className="page-content">
-      <Link href="/choose-plan">
-            <button className="signup-btn">
-              Sign Up
-            </button>
-          </Link>
-      <div className="page-container">
-        <div className="for-you-top">
-        </div>
+      {/* SIGN UP BUTTON */}
+      {(!user || user.subscription === "free-trial") && (
+        <Link href="/choose-plan">
+          <button className="signup-btn">Sign Up</button>
+        </Link>
+      )}
 
+      <div className="page-container">
+        {/* SELECTED BOOK */}
         {selectedBook && (
           <section>
             <h2>Selected just for you</h2>
@@ -156,28 +188,39 @@ export default function ForYouPage() {
           </section>
         )}
 
+        {/* RECOMMENDED */}
         <section>
           <h2>Recommended For You</h2>
           <br />
-
           <p className="section-subtitle">We think you'll like these</p>
 
-          <div className="books-row">
-            {recommendedBooks.map((book) => (
-              <BookCard key={book.id} book={book} />
-            ))}
+          <div className="carousel-wrapper">
+
+            <div className="books-row" ref={recommendedRef}>
+              {recommendedBooks.map((book) => (
+                <BookCard key={book.id} book={book} />
+              ))}
+            </div>
+
+            <button onClick={() => scroll(recommendedRef, 300)}><IoChevronForward/></button>
           </div>
         </section>
 
+        {/* SUGGESTED */}
         <section>
           <h2>Suggested Books</h2>
           <br />
-          <p className="section-subtitle">Browse those books</p>
+          <p className="section-subtitle">Browse these books</p>
 
-          <div className="books-row">
-            {suggestedBooks.map((book) => (
-              <BookCard key={book.id} book={book} />
-            ))}
+          <div className="carousel-wrapper">
+
+            <div className="books-row" ref={suggestedRef}>
+              {suggestedBooks.map((book) => (
+                <BookCard key={book.id} book={book} />
+              ))}
+            </div>
+
+            <button onClick={() => scroll(suggestedRef, 300)}><IoChevronForward/></button>
           </div>
         </section>
       </div>

@@ -1,37 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 Summarist Clone – Full Stack Web App
 
-## Getting Started
+A modern book summary platform inspired by Summarist, built with Next.js, Redux, and Firebase authentication. This app allows users to explore curated book summaries, listen to audio versions, and unlock premium content through a simulated subscription flow.
 
-First, run the development server:
+---
+
+## 🚀 Live Demo
+
+*https://advanced-virtual-internship-pied.vercel.app/*
+
+---
+
+## 🧠 Features
+
+### 🔐 Authentication
+
+* Email/password login (custom logic)
+* Google authentication (Firebase)
+* Guest login support
+* Persistent login via localStorage
+
+### 💳 Subscription System
+
+* Free trial, Premium, and Premium Plus plans
+* Plan selection flow
+* Simulated Stripe-style checkout experience
+* Form validation (card number, expiry, CVC)
+* Conditional UI based on subscription level
+
+### 📖 Book Experience
+
+* Browse recommended and suggested books
+* Dynamic book detail pages
+* Audio playback with progress saving
+* Read & Listen modes
+* Save books to personal library
+
+### 🎯 Smart UI Behavior
+
+* Premium content gating
+* Conditional rendering (premium badges, buttons, access)
+* Responsive design down to mobile (~320px)
+* Skeleton loaders for smooth UX
+* Horizontal carousel with infinite scroll behavior
+
+---
+
+## 🛠 Tech Stack
+
+* **Frontend:** Next.js (App Router), React
+* **State Management:** Redux Toolkit
+* **Authentication:** Firebase Auth
+* **Styling:** CSS (custom, responsive design)
+* **Icons:** React Icons
+* **Deployment:** Vercel
+
+---
+
+## 📦 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/markwaldron7string/Advanced-Virtual-Internship
+cd Advanced-Virtual-Internship
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧪 Test Payment Info
 
-To learn more about Next.js, take a look at the following resources:
+This project uses a **simulated Stripe checkout flow**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Use the following test card:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+Card Number: 4242 4242 4242 4242
+Expiration: Any future date (e.g. 04/30)
+CVC: Any 3 digits
+```
 
-## Deploy on Vercel
+More test cards:
+https://docs.stripe.com/testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Advanced-Virtual-Internship
+## 📁 Project Structure
+
+```
+src/
+  app/
+    (app)/
+      book/
+      player/
+      for-you/
+    checkout/
+  components/
+  redux/
+  services/
+  hooks/
+```
+
+---
+
+## ⚡ Key Highlights
+
+* Built a full authentication + subscription flow from scratch
+* Implemented conditional rendering based on user state
+* Designed a Stripe-like checkout UI with validation
+* Handled complex state transitions across pages
+* Fully responsive layout with mobile-first adjustments
+
+---
+
+## 🎯 Future Improvements
+
+* Real Stripe API integration
+* Dark mode toggle for premium users
+* User profile & settings page enhancements
+* Backend database for persistent user data
+
+---
+
+## 🙌 Acknowledgements
+
+* Inspired by the Summarist platform
+* Stripe UI patterns for checkout design
+* Firebase for authentication
+
+---
+
+## 📌 Author
+
+**Mark Waldron**
+
+---
+
+## 💬 Final Note
+
+This project represents a complete end-to-end user experience, including authentication, subscription logic, and responsive UI design. It reflects real-world frontend development challenges and solutions.

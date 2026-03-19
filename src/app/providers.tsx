@@ -15,12 +15,11 @@ function AuthListener({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(
-          login({
-            email: user.email!,
-            subscription: "premium-plus",
-          })
-        );
+        const stored = localStorage.getItem("user");
+
+        if (stored) {
+          dispatch(login(JSON.parse(stored)));
+        }
       } else {
         dispatch(logout());
       }

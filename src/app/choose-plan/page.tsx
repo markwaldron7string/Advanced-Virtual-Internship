@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { openAuthModal } from "@/redux/slices/authSlice";
+import { openAuthModal, setSubscriptionIntent } from "@/redux/slices/authSlice";
 
 import { IoDocumentTextSharp } from "react-icons/io5";
 import { PiPottedPlantFill } from "react-icons/pi";
@@ -118,7 +118,10 @@ export default function ChoosePlanPage() {
         {/* BUTTON */}
         <button
           className="pricing-btn"
-          onClick={() => dispatch(openAuthModal())}
+          onClick={() => {
+            dispatch(setSubscriptionIntent(isPlus ? "premium-plus" : "premium"));
+            dispatch(openAuthModal("signup-plan"));
+          }}
         >
           {isPlus ? "Start your free 7-day trial" : "Start your first month"}
         </button>
