@@ -30,7 +30,7 @@ export default function ForYouPage() {
 
   /* ---------------- SCROLL FUNCTION ---------------- */
 
-  const scroll = (ref: React.RefObject<HTMLDivElement>, amount: number) => {
+  const scroll = (ref: React.RefObject<HTMLDivElement | null>, amount: number) => {
   if (!ref.current) return;
 
   const el = ref.current;
